@@ -1,10 +1,14 @@
 var mainCharacter;
-var myObstacle;
+var borderTop;
+var borderBottom;
+var borderLeft;
 
 function startGame() {
   myGameArea.start();
-  mainCharacter = new component(30, 30, "green", 10, 120);
-  myObstacle = new component(10, 200, "red", 300, 120);
+  mainCharacter = new component(30, 30, "green", 350, 131);
+  borderTop = new component(700, 10, "red", 0, 0);
+  borderBottom = new component(700, 10, "red", 0, 383);
+  borderLeft = new component(10, 393, "red", 0, 10);
 }
 
 var myGameArea = {
@@ -97,11 +101,16 @@ function stopMove() {
 }
 
 function updateGameArea() {
-  if (mainCharacter.crashWith(myObstacle)) {
+  if (
+    mainCharacter.crashWith(borderTop) ||
+    mainCharacter.crashWith(borderBottom)
+  ) {
     myGameArea.stop();
   } else {
     myGameArea.clear();
-    myObstacle.update();
+    borderTop.update();
+    borderBottom.update();
+    borderLeft.update();
     mainCharacter.speedX = 0;
     mainCharacter.speedY = 0;
     if (myGameArea.keys && myGameArea.keys[37]) {
