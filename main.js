@@ -1,22 +1,33 @@
+//components
 var mainCharacter;
 var borderTop;
 var borderBottom;
 var borderLeft;
+var myScore;
+var topScore;
+//variables
+let minuite,
+  score = 0;
+let top_score = localStorage.getItem("top_score") || 0;
 
+//initialization of the game area and components
 function startGame() {
   myGameArea.start();
-  mainCharacter = new component(30, 30, "green", 350, 131);
+  mainCharacter = new component(30, 30, "green", 340, 195);
   borderTop = new component(700, 10, "red", 0, 0);
-  borderBottom = new component(700, 10, "red", 0, 383);
+  borderBottom = new component(700, 10, "red", 0, 390);
   borderLeft = new component(10, 393, "red", 0, 10);
+  borderRight = new component(10, 393, "red", 690, 10);
+  myScore = new text_comp("70px", "Consolas", "black", 280, 40);
+  topScore = new text_comp("70px", "Consolas", "black", 420, 40);
 }
 
+//Where the canvas element is initialized and controlled
 var myGameArea = {
   canvas: document.createElement("canvas"),
   start: function () {
     this.canvas.width = 700;
-    this.canvas.style.border = "solid 2px";
-    this.canvas.height = 393;
+    this.canvas.height = 400;
     this.context = this.canvas.getContext("2d");
     document.body.insertBefore(this.canvas, document.body.childNodes[8]);
     this.interval = setInterval(updateGameArea, 20);
@@ -36,6 +47,23 @@ var myGameArea = {
   },
 };
 
+//bullet component
+function bullet_comp() {}
+
+//Text component for the score and initial screen
+function text_comp(size, font, color, x, y) {
+  this.width = size;
+  this.height = font;
+  this.x = x;
+  this.y = y;
+  this.update = function () {
+    ctx.font = this.size + " " + this.height;
+    ctx.fillStyle = color;
+    ctx.fillText(this.text, this.x, this.y);
+  };
+}
+
+//default component for main characters and borders
 function component(width, height, color, x, y) {
   this.width = width;
   this.height = height;
@@ -48,10 +76,12 @@ function component(width, height, color, x, y) {
     ctx.fillStyle = color;
     ctx.fillRect(this.x, this.y, this.width, this.height);
   };
+  //changes the position of the component
   this.newPos = function () {
     this.x += this.speedX;
     this.y += this.speedY;
   };
+  //collision detection
   this.crashWith = function (otherobj) {
     var myleft = this.x;
     var myright = this.x + this.width;
@@ -74,6 +104,7 @@ function component(width, height, color, x, y) {
   };
 }
 
+//movements for the mainCharacter
 function moveup() {
   mainCharacter.speedY -= 1;
 }
@@ -95,34 +126,58 @@ function stopMove() {
   mainCharacter.speedY = 0;
 }
 
-function stopMove() {
-  mainCharacter.speedX = 0;
-  mainCharacter.speedY = 0;
-}
-
+//what happens everytime the frame updates
 function updateGameArea() {
   if (
     mainCharacter.crashWith(borderTop) ||
-    mainCharacter.crashWith(borderBottom)
+    mainCharacter.crashWith(borderBottom) ||
+    mainCharacter.crashWith(borderLeft) ||
+    mainCharacter.crashWith(borderRight)
   ) {
+    //update topScore and top_score
+    if (score > top_score) {
+      top_score = score;
+      localStorage.setItem("top_score", score);
+    }
     myGameArea.stop();
   } else {
     myGameArea.clear();
     borderTop.update();
     borderBottom.update();
     borderLeft.update();
+    borderRight.update();
+
+    // processing the one point per second rule
+    if (minuite < 50) {
+      minuite++;
+    } else {
+      minuite = 0;
+      score++;
+    }
+    //changing top_score for efficient instant adjustment
+    if (score > top_score) {
+      topScore.text = `TOP SCORE: ${score}`;
+      topScore.update();
+    } else {
+      topScore.text = `TOP SCORE: ${top_score}`;
+      topScore.update();
+    }
+    //changing the text for myScore
+    myScore.text = `SCORE: ${score}`;
+    myScore.update();
+    //Moving the character
     mainCharacter.speedX = 0;
     mainCharacter.speedY = 0;
-    if (myGameArea.keys && myGameArea.keys[37]) {
+    if (myGameArea.keys && (myGameArea.keys[37] || myGameArea.keys[65])) {
       mainCharacter.speedX = -5;
     }
-    if (myGameArea.keys && myGameArea.keys[39]) {
+    if (myGameArea.keys && (myGameArea.keys[39] || myGameArea.keys[68])) {
       mainCharacter.speedX = 5;
     }
-    if (myGameArea.keys && myGameArea.keys[38]) {
+    if (myGameArea.keys && (myGameArea.keys[38] || myGameArea.keys[87])) {
       mainCharacter.speedY = -5;
     }
-    if (myGameArea.keys && myGameArea.keys[40]) {
+    if (myGameArea.keys && (myGameArea.keys[40] || myGameArea.keys[83])) {
       mainCharacter.speedY = 5;
     }
     mainCharacter.newPos();
