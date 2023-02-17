@@ -7,33 +7,28 @@ var myScore;
 var topScore;
 var borderRight;
 let bullet_array = [];
-let interval = 10000;
+let interval = 50;
+let time_before_next_shot = 0;
 let health = 3;
+let chosen_border = "";
+let mainCharx = 340;
+let mainChary = 195;
 
-// //mapping of name to component
-// let name_border_map = {
-//   top: "borderTop",
-//   bottom: "borderBottom",
-//   left: "borderLeft",
-//   right: "borderRight",
-// };
 //array of border components
 let border_arr = ["top", "bottom", "left", "right"];
 
 //function causes one of the borders to shoot a bullet from a random spot on the side facing inwards and at a random degree. They start of slowly shooting, but the interval shrinks to a certain number, until it shoots 4-5 per minuite.
 function choose_shooting_border() {
-  setTimeout(() => {
-    if (interval > 20) {
-      interval -= 1;
-    }
-    let chosen_border =
-      border_arr[Math.floor(Math.random() * border_arr.length)];
-    return chosen_border;
-  }, interval);
+  if (interval > 20) {
+    interval -= 1;
+  }
+  chosen_border = border_arr[Math.floor(Math.random() * border_arr.length)];
 }
 
 //bullet component. will have a hit
-function bullet_comp(x, y, direction) {
+function bullet_comp(x, y, direction, name, angle) {
+  this.angle = angle;
+  this.name = name;
   this.x = x;
   this.y = y;
   this.width = 10;
@@ -42,15 +37,19 @@ function bullet_comp(x, y, direction) {
   this.color = "red";
   this.update = function () {
     ctx = myGameArea.context;
-    ctx.fillStyle = color;
-    ctx.fillRect(this.x, this.y, this.width, this.height);
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.angle);
+    ctx.fillStyle = "red";
+    ctx.fillRect(this.width / -2, this.height / -2, this.width, this.height);
+    ctx.restore();
   };
   //changes the position of the component
   this.newPos = function () {
     if (this.direction == "down") {
-      this.y -= 3;
-    } else if (this.direction == "up") {
       this.y += 3;
+    } else if (this.direction == "up") {
+      this.y -= 3;
     } else if (this.direction == "left") {
       this.x -= 3;
     } else if (this.direction == "right") {
@@ -76,20 +75,12 @@ function bullet_comp(x, y, direction) {
     ) {
       crash = false;
     }
-    if (crash) {
-      if (otherobj.type == "border") {
-        return;
-      } else if (otherobj.type == "component") {
-        health -= 1;
-        return;
-      }
-    }
+    return crash;
   };
 }
 
 //border component, which will be shooting out the flames
 function border_comp(width, height, color, x, y, name) {
-  this.type = "border";
   this.name = name;
   this.width = width;
   this.height = height;
@@ -101,21 +92,37 @@ function border_comp(width, height, color, x, y, name) {
     ctx.fillRect(this.x, this.y, this.width, this.height);
   };
   this.shoot = function () {
+    let nom = makeid(5);
     if (this.name == "top") {
-      bullet_array.push(new bullet_comp(getRandomInt(20, 680), 8, "down"));
+      let random_int = getRandomInt(20, 680);
+      let ang = Math.atan(
+        Math.abs(mainCharx - random_int) / Math.abs(mainChary - 20)
+      );
+      bullet_array.push(new bullet_comp(random_int, 20, "down", nom, ang));
     } else if (this.name == "bottom") {
-      bullet_array.push(new bullet_comp(getRandomInt(20, 680), 360, "up"));
+      let random_int = getRandomInt(20, 680);
+      let ang = Math.atan(
+        Math.abs(mainCharx - random_int) / Math.abs(mainChary - 360)
+      );
+      bullet_array.push(new bullet_comp(random_int, 360, "up", nom, ang));
     } else if (this.name == "left") {
-      bullet_array.push(new bullet_comp(8, getRandomInt(20, 370), "right"));
+      let random_int = getRandomInt(20, 370);
+      let ang = Math.atan(
+        Math.abs(mainCharx - 20) / Math.abs(mainChary - random_int)
+      );
+      bullet_array.push(new bullet_comp(20, random_int, "right", nom, ang));
     } else if (this.name == "right") {
-      bullet_array.push(new bullet_comp(660, getRandomInt(20, 370), "left"));
+      let random_int = getRandomInt(20, 370);
+      let ang = Math.atan(
+        Math.abs(mainCharx - 660) / Math.abs(mainChary - random_int)
+      );
+      bullet_array.push(new bullet_comp(660, random_int, "left", nom, ang));
     }
   };
 }
 
 //Text component for the score and initial screen
 function text_comp(size, font, color, x, y) {
-  this.type = "text";
   this.width = size;
   this.height = font;
   this.x = x;
@@ -129,7 +136,6 @@ function text_comp(size, font, color, x, y) {
 
 //default component for main characters and borders
 function component(width, height, color, x, y) {
-  this.type = "component";
   this.width = width;
   this.height = height;
   this.speedX = 0;
@@ -145,6 +151,8 @@ function component(width, height, color, x, y) {
   this.newPos = function () {
     this.x += this.speedX;
     this.y += this.speedY;
+    mainCharx = this.x;
+    mainChary = this.y;
   };
   //collision detection
   this.crashWith = function (otherobj) {
@@ -197,7 +205,19 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function makeid(length) {
+  let result = "";
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const charactersLength = characters.length;
+  let counter = 0;
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    counter += 1;
+  }
+  return result;
+}
+
 /**
- * @todo once bullets implemented, turn them into firseball emoji.
- * @todo for bullet in bullet array, check for collision. If hit border, remove. if hit mainChar, loose a life from the global health var. update and render. If !border, got this.hit = true. From there in the update function, loose one life. Make health a global variable set to 3. When 0, gameArea.stop()
+ * @todo rotation finished for bullets, make them go in this direction
  */

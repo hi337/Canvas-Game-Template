@@ -5,10 +5,25 @@
     <link rel="stylesheet" href="styles.css" />
     <script defer src="main.js"></script>
     <script defer src="components.js"></script>
+    <script defer>
+      x = true;
+      function game_stop() {
+        if (x) {
+          myGameArea.stop();
+          x = false;
+          document.getElementById("pause_button").innerHTML = "Play";
+        } else {
+          startGame();
+          x = true;
+          document.getElementById("pause_button").innerHTML = "Pause";
+        }
+      }
+    </script>
   </head>
   <body onload="startGame()">
     <h1>FireRun</h1>
     <p>Use your keyboard keys or WASD to move the green square.</p>
     <p>The longer you can stay alive, the higher your score.</p>
+    <button id="pause_button" onclick="game_stop()">Pause</button>
   </body>
 </html>

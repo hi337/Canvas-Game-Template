@@ -1,12 +1,12 @@
 //variables
 let minuite,
   score = 0;
-let top_score = localStorage.getItem("top_score") || 0;
+let top_score = +window.localStorage.getItem("top_score") || 0;
 
 //initialization of the game area and components
 function startGame() {
   myGameArea.start();
-  mainCharacter = new component(30, 30, "green", 340, 195);
+  mainCharacter = new component(30, 30, "green", mainCharx, mainChary);
   borderTop = new border_comp(700, 10, "red", 0, 0, "top");
   borderBottom = new border_comp(700, 10, "red", 0, 390, "bottom");
   borderLeft = new border_comp(10, 393, "red", 0, 10, "left");
@@ -57,21 +57,44 @@ function updateGameArea() {
   borderBottom.update();
   borderLeft.update();
   borderRight.update();
-  let chosen_border = choose_shooting_border();
 
-  if (chosen_border == "top") {
-    borderTop.shoot();
-  } else if (chosen_border == "bottom") {
-    borderBottom.shoot();
-  } else if (chosen_border == "left") {
-    borderLeft.shoot();
-  } else if (chosen_border == "right") {
-    borderRight.shoot();
+  time_before_next_shot++;
+
+  if (time_before_next_shot >= interval) {
+    choose_shooting_border();
+    if (chosen_border == "top") {
+      borderTop.shoot();
+    } else if (chosen_border == "bottom") {
+      borderBottom.shoot();
+    } else if (chosen_border == "left") {
+      borderLeft.shoot();
+    } else if (chosen_border == "right") {
+      borderRight.shoot();
+    }
+    time_before_next_shot = 0;
+
+    if (interval > 10) {
+      interval -= 0.1;
+    }
   }
 
-  for (let Bullet in bullet_array) {
-    Bullet.newPos();
-    Bullet.update();
+  for (var y = 0; y < bullet_array.length; y++) {
+    if (
+      bullet_array[y].crashWith(borderBottom) ||
+      bullet_array[y].crashWith(borderLeft) ||
+      bullet_array[y].crashWith(borderTop) ||
+      bullet_array[y].crashWith(borderRight)
+    ) {
+      delete bullet_array[y];
+    } else if (bullet_array[y].crashWith(mainCharacter)) {
+      delete bullet_array[y];
+      health -= 1;
+    }
+
+    bullet_array = bullet_array.filter((item) => item !== undefined);
+
+    bullet_array[y].newPos();
+    bullet_array[y].update();
   }
 
   // processing the one point per second rule
@@ -83,16 +106,19 @@ function updateGameArea() {
   }
   //changing top_score for efficient instant adjustment
   if (score > top_score) {
-    topScore.text = `TOP SCORE: ${score}`;
-    topScore.update();
-  } else {
-    topScore.text = `TOP SCORE: ${top_score}`;
-    topScore.update();
+    top_score++;
   }
+  topScore.text = `TOP SCORE: ${top_score}`;
+  topScore.update();
+
   //changing the text for myScore
   myScore.text = `SCORE: ${score}`;
   myScore.update();
   //update health
+  if (health <= 0) {
+    window.localStorage.setItem("top_score", top_score);
+    myGameArea.stop();
+  }
   Health.text = `HEALTH: ${health}`;
   Health.update();
 
