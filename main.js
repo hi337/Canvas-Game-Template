@@ -3,6 +3,7 @@ let minuite,
   score = 0;
 let top_score = +window.localStorage.getItem("top_score") || 0;
 let is_mobile = false;
+let joy;
 
 //check mobile device
 if (
@@ -17,14 +18,15 @@ if (
   is_mobile = true;
 }
 
+if (!is_mobile) {
+  document.getElementById("joyDiv").remove();
+} else {
+  joy = new JoyStick("joyDiv");
+}
+
 //initialization of the game area and components
 function startGame() {
   myGameArea.start();
-  if (!is_mobile) {
-    document.getElementById("joyDiv").remove();
-  } else {
-    let joy = new JoyStick("joyDiv");
-  }
   mainCharacter = new component(30, 30, "green", mainCharx, mainChary);
   borderTop = new border_comp(700, 10, "red", 0, 0, "top");
   borderBottom = new border_comp(700, 10, "red", 0, 390, "bottom");
