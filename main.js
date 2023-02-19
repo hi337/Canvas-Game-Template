@@ -2,29 +2,6 @@
 let minuite,
   score = 0;
 let top_score = +window.localStorage.getItem("top_score") || 0;
-let is_mobile = false;
-let joy;
-
-//check mobile device
-if (
-  navigator.userAgent.match(/Android/i) ||
-  navigator.userAgent.match(/webOS/i) ||
-  navigator.userAgent.match(/iPhone/i) ||
-  navigator.userAgent.match(/iPad/i) ||
-  navigator.userAgent.match(/iPod/i) ||
-  navigator.userAgent.match(/BlackBerry/i) ||
-  navigator.userAgent.match(/Windows Phone/i)
-) {
-  is_mobile = true;
-}
-
-// if (!is_mobile) {
-//   document.getElementById("joyDiv").remove();
-// } else {
-//   joy = new JoyStick("joyDiv");
-// }
-
-joy = new JoyStick("joyDiv");
 
 //initialization of the game area and components
 function startGame() {
