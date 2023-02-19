@@ -18,11 +18,13 @@ if (
   is_mobile = true;
 }
 
-if (!is_mobile) {
-  document.getElementById("joyDiv").remove();
-} else {
-  joy = new JoyStick("joyDiv");
-}
+// if (!is_mobile) {
+//   document.getElementById("joyDiv").remove();
+// } else {
+//   joy = new JoyStick("joyDiv");
+// }
+
+joy = new JoyStick("joyDiv");
 
 //initialization of the game area and components
 function startGame() {
