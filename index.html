@@ -6,15 +6,15 @@
     <script defer src="main.js"></script>
     <script defer src="components.js"></script>
     <script defer>
-      x = true;
+      let paused = true;
       function game_stop() {
-        if (x) {
+        if (paused) {
           myGameArea.stop();
-          x = false;
+          paused = false;
           document.getElementById("pause_button").innerHTML = "Play";
         } else {
           startGame();
-          x = true;
+          paused = true;
           document.getElementById("pause_button").innerHTML = "Pause";
         }
       }

@@ -7,7 +7,7 @@ var myScore;
 var topScore;
 var borderRight;
 let bullet_array = [];
-let interval = 50;
+let interval = 70;
 let time_before_next_shot = 0;
 let health = 3;
 let chosen_border = "";
@@ -26,14 +26,15 @@ function choose_shooting_border() {
 }
 
 //bullet component. will have a hit
-function bullet_comp(x, y, direction, name, angle) {
+function bullet_comp(x, y, name, angle, speedX, speedY) {
+  this.speedX = speedX;
+  this.speedY = speedY;
   this.angle = angle;
   this.name = name;
   this.x = x;
   this.y = y;
   this.width = 10;
   this.height = 10;
-  this.direction = direction;
   this.color = "red";
   this.update = function () {
     ctx = myGameArea.context;
@@ -46,15 +47,8 @@ function bullet_comp(x, y, direction, name, angle) {
   };
   //changes the position of the component
   this.newPos = function () {
-    if (this.direction == "down") {
-      this.y += 3;
-    } else if (this.direction == "up") {
-      this.y -= 3;
-    } else if (this.direction == "left") {
-      this.x -= 3;
-    } else if (this.direction == "right") {
-      this.x += 3;
-    }
+    this.x += this.speedX;
+    this.y += this.speedY;
   };
   //collision detection
   this.crashWith = function (otherobj) {
@@ -94,29 +88,37 @@ function border_comp(width, height, color, x, y, name) {
   this.shoot = function () {
     let nom = makeid(5);
     if (this.name == "top") {
-      let random_int = getRandomInt(20, 680);
+      let random_int = getRandomInt(30, 670);
       let ang = Math.atan(
         Math.abs(mainCharx - random_int) / Math.abs(mainChary - 20)
       );
-      bullet_array.push(new bullet_comp(random_int, 20, "down", nom, ang));
+      let slope = (mainChary - 20) / (mainCharx - random_int);
+      if (mainCharx < random_int) slope = -slope;
+      bullet_array.push(new bullet_comp(random_int, 20, nom, ang, slope, 1));
     } else if (this.name == "bottom") {
       let random_int = getRandomInt(20, 680);
       let ang = Math.atan(
         Math.abs(mainCharx - random_int) / Math.abs(mainChary - 360)
       );
-      bullet_array.push(new bullet_comp(random_int, 360, "up", nom, ang));
+      let slope = Math.abs(mainChary - 360) / Math.abs(mainCharx - random_int);
+      if (mainCharx < random_int) slope = -slope;
+      bullet_array.push(new bullet_comp(random_int, 360, nom, ang, slope, -1));
     } else if (this.name == "left") {
       let random_int = getRandomInt(20, 370);
       let ang = Math.atan(
         Math.abs(mainCharx - 20) / Math.abs(mainChary - random_int)
       );
-      bullet_array.push(new bullet_comp(20, random_int, "right", nom, ang));
+      let slope = Math.abs(mainChary - random_int) / Math.abs(mainCharx - 20);
+      if (mainChary < random_int) slope = -slope;
+      bullet_array.push(new bullet_comp(20, random_int, nom, ang, 1, slope));
     } else if (this.name == "right") {
       let random_int = getRandomInt(20, 370);
       let ang = Math.atan(
         Math.abs(mainCharx - 660) / Math.abs(mainChary - random_int)
       );
-      bullet_array.push(new bullet_comp(660, random_int, "left", nom, ang));
+      let slope = Math.abs(mainChary - random_int) / Math.abs(mainCharx - 660);
+      if (mainChary < random_int) slope = -slope;
+      bullet_array.push(new bullet_comp(660, random_int, nom, ang, -1, slope));
     }
   };
 }
