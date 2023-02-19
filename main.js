@@ -22,6 +22,8 @@ function startGame() {
   myGameArea.start();
   if (!is_mobile) {
     document.getElementById("joyDiv").remove();
+  } else {
+    let joy = new JoyStick("joyDiv");
   }
   mainCharacter = new component(30, 30, "green", mainCharx, mainChary);
   borderTop = new border_comp(700, 10, "red", 0, 0, "top");
