@@ -15,16 +15,14 @@ if (
   navigator.userAgent.match(/Windows Phone/i)
 ) {
   is_mobile = true;
-  //joystick init
-  let joy_div = document.createElement("div");
-  joy_div.id = "joyDiv";
-  joy_div.insertBefore(joy_div, document.body.childNodes[12]);
-  var joy = new JoyStick("joyDiv");
 }
 
 //initialization of the game area and components
 function startGame() {
   myGameArea.start();
+  if (!is_mobile) {
+    document.getElementById("joyDiv").remove();
+  }
   mainCharacter = new component(30, 30, "green", mainCharx, mainChary);
   borderTop = new border_comp(700, 10, "red", 0, 0, "top");
   borderBottom = new border_comp(700, 10, "red", 0, 390, "bottom");
