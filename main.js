@@ -18,7 +18,7 @@ if (
   //joystick init
   let joy_div = document.createElement("div");
   joy_div.id = "joyDiv";
-  joy_div.insertBefore(joy_div, document.body.childNodes[10]);
+  joy_div.insertBefore(joy_div, document.body.childNodes[12]);
   var joy = new JoyStick("joyDiv");
 }
 
