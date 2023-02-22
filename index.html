@@ -29,7 +29,18 @@
       <button id="pause_button" onclick="game_pause()">Pause</button>
       <button id="pause_button" onclick="game_restart()">Restart</button>
     </div>
-    <div style="width: 700px; height: 400" id="start_screen">
+    <div
+      style="
+        width: 700px;
+        height: 400px;
+        border: 2px black solid;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      "
+      id="start_screen"
+    >
       <p>
         Use your keyboard keys or WASD to move the green square.
         <br />
@@ -37,7 +48,7 @@
         <br />
         The longer you can stay alive, the higher your score.
       </p>
-      <button id="start-button" onclick="startGame()">Start</button>
+      <button onclick="startGame()">Start</button>
     </div>
   </body>
 </html>
