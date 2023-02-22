@@ -24,14 +24,20 @@
       }
     </script>
   </head>
-  <body onload="startGame()">
-    <h1>FireRun</h1>
-    <p>Use your keyboard keys or WASD to move the green square.</p>
-    <p>Press Shift to accelerate</p>
-    <p>The longer you can stay alive, the higher your score.</p>
+  <body>
     <div style="padding-bottom: 5px" class="button-container">
       <button id="pause_button" onclick="game_pause()">Pause</button>
       <button id="pause_button" onclick="game_restart()">Restart</button>
+    </div>
+    <div style="width: 700px; height: 400" id="start_screen">
+      <p>
+        Use your keyboard keys or WASD to move the green square.
+        <br />
+        Press Shift to accelerate
+        <br />
+        The longer you can stay alive, the higher your score.
+      </p>
+      <button id="start-button" onclick="startGame()">Start</button>
     </div>
   </body>
 </html>

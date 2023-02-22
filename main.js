@@ -6,6 +6,7 @@ let acceleration = 0;
 
 //initialization of the game area and components
 function startGame() {
+  document.getElementById("start-button").hidden = true;
   myGameArea.start();
   mainCharacter = new component(30, 30, "green", mainCharx, mainChary);
   borderTop = new border_comp(700, 10, "red", 0, 0, "top");
