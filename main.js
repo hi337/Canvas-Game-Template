@@ -2,6 +2,7 @@
 let minuite,
   score = 0;
 let top_score = +window.localStorage.getItem("top_score") || 0;
+let acceleration = 0;
 
 //initialization of the game area and components
 function startGame() {
@@ -23,7 +24,7 @@ var myGameArea = {
     this.canvas.width = 700;
     this.canvas.height = 400;
     this.context = this.canvas.getContext("2d");
-    document.body.insertBefore(this.canvas, document.body.childNodes[8]);
+    document.body.insertBefore(this.canvas, document.body.childNodes[10]);
     this.interval = setInterval(updateGameArea, 20);
     window.addEventListener("keydown", function (e) {
       myGameArea.keys = myGameArea.keys || {};
@@ -44,13 +45,13 @@ var myGameArea = {
 //what happens everytime the frame updates
 function updateGameArea() {
   if (mainCharacter.crashWith(borderTop)) {
-    mainCharacter.y = 360;
+    mainCharacter.y = 355;
   } else if (mainCharacter.crashWith(borderBottom)) {
-    mainCharacter.y = 8;
+    mainCharacter.y = 13;
   } else if (mainCharacter.crashWith(borderRight)) {
-    mainCharacter.x = 8;
+    mainCharacter.x = 13;
   } else if (mainCharacter.crashWith(borderLeft)) {
-    mainCharacter.x = 660;
+    mainCharacter.x = 655;
   }
   myGameArea.clear();
   borderTop.update();
@@ -122,21 +123,28 @@ function updateGameArea() {
   Health.text = `HEALTH: ${health}`;
   Health.update();
 
+  //detecting shift to accelerate
+  if (myGameArea.keys && myGameArea.keys[16]) {
+    acceleration = 3;
+  } else {
+    acceleration = 0;
+  }
+
   //Moving the character
   mainCharacter.speedX = 0;
   mainCharacter.speedY = 0;
 
   if (myGameArea.keys && (myGameArea.keys[37] || myGameArea.keys[65])) {
-    mainCharacter.speedX = -5;
+    mainCharacter.speedX = -2 - acceleration;
   }
   if (myGameArea.keys && (myGameArea.keys[39] || myGameArea.keys[68])) {
-    mainCharacter.speedX = 5;
+    mainCharacter.speedX = 2 + acceleration;
   }
   if (myGameArea.keys && (myGameArea.keys[38] || myGameArea.keys[87])) {
-    mainCharacter.speedY = -5;
+    mainCharacter.speedY = -2 - acceleration;
   }
   if (myGameArea.keys && (myGameArea.keys[40] || myGameArea.keys[83])) {
-    mainCharacter.speedY = 5;
+    mainCharacter.speedY = 2 + acceleration;
   }
   mainCharacter.newPos();
   mainCharacter.update();
