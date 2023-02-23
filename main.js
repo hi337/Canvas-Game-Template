@@ -3,10 +3,18 @@ let minuite,
   score = 0;
 let top_score = +window.localStorage.getItem("top_score") || 0;
 let acceleration = 0;
+let pause = true;
+
+function endPause() {
+  pause = true;
+  myGameArea.canvas.style.display = "block";
+  document.getElementById("play_screen").style.display = "none";
+  startGame();
+}
 
 //initialization of the game area and components
 function startGame() {
-  document.getElementById("start_screen").style.display = "none";
+  // document.getElementById("start_screen").style.display = "none";
   myGameArea.start();
   mainCharacter = new component(30, 30, "green", mainCharx, mainChary);
   borderTop = new border_comp(700, 10, "red", 0, 0, "top");
@@ -59,6 +67,19 @@ function updateGameArea() {
   borderBottom.update();
   borderLeft.update();
   borderRight.update();
+
+  //detecting r for reset and p for pause
+  if (myGameArea.keys && myGameArea.keys[82]) {
+    location.reload();
+  }
+  if (myGameArea.keys && myGameArea.keys[80]) {
+    if (pause) {
+      myGameArea.stop();
+      pause = false;
+      myGameArea.canvas.style.display = "none";
+      document.getElementById("play_screen").style.display = "flex";
+    }
+  }
 
   time_before_next_shot++;
 

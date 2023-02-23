@@ -221,5 +221,6 @@ function makeid(length) {
 }
 
 /**
- * @todo rotation finished for bullets, make them go in this direction
+ * @todo remove all depreciated libraries like e.keyCode and use requestAnimaitonFrame()
+ * @todo ask gpt how to improve code
  */

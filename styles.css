@@ -2,6 +2,8 @@ canvas {
   border: 1px solid #d3d3d3;
   background-color: #f1f1f1;
   display: block;
+  width: 90%;
+  height: 90%;
 }
 
 html {
@@ -10,10 +12,7 @@ html {
   flex-direction: column;
   justify-content: center;
   height: 100%;
-}
-
-h1 {
-  text-decoration: underline;
+  width: 100%;
 }
 
 p {
@@ -24,16 +23,17 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 100%;
   justify-content: center;
   align-items: center;
-}
-
-.button-container {
-  display: flex;
-  height: auto;
 }
 
 :root {
   touch-action: pan-x pan-y;
   height: 100%;
+}
+
+.play_screen {
+  width: 90%;
+  height: 90%;
 }
