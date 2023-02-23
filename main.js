@@ -4,6 +4,9 @@ let minuite,
 let top_score = +window.localStorage.getItem("top_score") || 0;
 let acceleration = 0;
 
+//lock screen orientation for mobile devices
+screen.orientation.lock("landscape");
+
 //initialization of the game area and components
 function startGame() {
   document.getElementById("start_screen").style.display = "none";
