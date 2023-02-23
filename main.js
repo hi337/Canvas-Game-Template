@@ -5,7 +5,15 @@ let top_score = +window.localStorage.getItem("top_score") || 0;
 let acceleration = 0;
 
 //lock screen orientation for mobile devices
-screen.orientation.lock("landscape");
+document.addEventListener("orientationchange", function (event) {
+  switch (window.orientation) {
+    case -90:
+    case 90:
+      break;
+    default:
+      alert("game only works in landscape mode");
+  }
+});
 
 //initialization of the game area and components
 function startGame() {
