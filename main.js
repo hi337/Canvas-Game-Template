@@ -63,6 +63,11 @@ var myGameArea = {
   },
   stop: function () {
     clearInterval(this.interval);
+    window.addEventListener("keydown", function (e) {
+      if (e.keyCode == 82) {
+        location.reload();
+      }
+    });
   },
 };
 
