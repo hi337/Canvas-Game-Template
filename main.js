@@ -4,6 +4,7 @@ let minuite,
 let top_score = +window.localStorage.getItem("top_score") || 0;
 let acceleration = 0;
 let paused = false;
+let allow_pause = true;
 
 function endPause() {
   pause = true;
@@ -37,10 +38,23 @@ var myGameArea = {
     document.body.insertBefore(this.canvas, document.body.childNodes[10]);
     this.interval = setInterval(updateGameArea, 20);
     window.addEventListener("keydown", function (e) {
+      if (allow_pause) {
+        if (e.keyCode == 80) {
+          if (!paused) {
+            paused = true;
+          } else {
+            paused = false;
+          }
+        }
+        allow_pause = false;
+      }
       myGameArea.keys = myGameArea.keys || {};
       myGameArea.keys[e.keyCode] = true;
     });
     window.addEventListener("keyup", function (e) {
+      if (e.keyCode == 80) {
+        allow_pause = true;
+      }
       myGameArea.keys[e.keyCode] = false;
     });
   },
@@ -54,14 +68,6 @@ var myGameArea = {
 
 //what happens everytime the frame updates
 function updateGameArea() {
-  if (myGameArea.keys && myGameArea.keys[80]) {
-    if (!paused) {
-      paused = true;
-    } else {
-      paused = false;
-    }
-  }
-
   if (!paused) {
     if (mainCharacter.crashWith(borderTop)) {
       mainCharacter.y = 355;

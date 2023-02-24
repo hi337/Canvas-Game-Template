@@ -9,17 +9,6 @@
       name="viewport"
       content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height"
     />
-    <script defer>
-      window.addEventListener("keydown", function (e) {
-        if (!pause) {
-          if (e.keyCode == 80) {
-            pause = true;
-            endPause();
-            return;
-          }
-        }
-      });
-    </script>
   </head>
   <body onload="startGame()">
     <div
