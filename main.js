@@ -73,6 +73,10 @@ var myGameArea = {
 
 //what happens everytime the frame updates
 function updateGameArea() {
+  //detecting r for reset and p for pause
+  if (myGameArea.keys && myGameArea.keys[82]) {
+    location.reload();
+  }
   if (!paused) {
     if (mainCharacter.crashWith(borderTop)) {
       mainCharacter.y = 355;
