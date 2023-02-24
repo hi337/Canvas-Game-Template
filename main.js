@@ -22,10 +22,10 @@ function startGame() {
   borderBottom = new border_comp(700, 10, "red", 0, 390, "bottom");
   borderLeft = new border_comp(10, 393, "red", 0, 10, "left");
   borderRight = new border_comp(10, 393, "red", 690, 10, "right");
-  myScore = new text_comp("70px", "Consolas", "black", 200, 40);
-  topScore = new text_comp("70px", "Consolas", "black", 330, 40);
-  Health = new text_comp("70px", "Consolas", "black", 460, 40);
-  pausedText = new text_comp("100px", "Consolas", "black", 340, 195);
+  myScore = new text_comp("12px", "Consolas", "black", 200, 40);
+  topScore = new text_comp("12px", "Consolas", "black", 310, 40);
+  Health = new text_comp("12px", "Consolas", "black", 445, 40);
+  pausedText = new text_comp("30px", "Consolas", "black", 310, 200);
 }
 
 //Where the canvas element is initialized and controlled

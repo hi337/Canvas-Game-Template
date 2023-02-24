@@ -125,12 +125,10 @@ function border_comp(width, height, color, x, y, name) {
 
 //Text component for the score and initial screen
 function text_comp(size, font, color, x, y) {
-  this.width = size;
-  this.height = font;
   this.x = x;
   this.y = y;
   this.update = function () {
-    ctx.font = this.size + " " + this.height;
+    ctx.font = size + " " + font;
     ctx.fillStyle = color;
     ctx.fillText(this.text, this.x, this.y);
   };
